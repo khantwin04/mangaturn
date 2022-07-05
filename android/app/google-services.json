@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "482182254635",
+    "project_id": "mangaturn-59304",
+    "storage_bucket": "mangaturn-59304.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482182254635:android:26756f807371ce828ada6e",
+        "android_client_info": {
+          "package_name": "com.codetotalk.mangaturn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482182254635-neb5qu0oqaiabkoturs7fjid7hmfgq6g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codetotalk.mangaturn",
+            "certificate_hash": "b2b562f36752a5a815d809c635807033ebaf2118"
+          }
+        },
+        {
+          "client_id": "482182254635-rhv3f1rq557q01n5tco0ik9d2tfavvsp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8ZQtevAGHCCvkKdMm_Ewwk47pcU7qICA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482182254635-rhv3f1rq557q01n5tco0ik9d2tfavvsp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-2550463160193134~5120798962"
+    }
+  ],
+  "configuration_version": "1"
+}
