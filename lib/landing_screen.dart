@@ -72,7 +72,7 @@ class _LandingScreenState extends State<LandingScreen> {
     flutterLocalNotificationsPlugin!.initialize(
       initializationSettings,
     );
-   //onSelectNotification: onSelectNotification
+    //onSelectNotification: onSelectNotification
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
@@ -84,7 +84,6 @@ class _LandingScreenState extends State<LandingScreen> {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification!.android;
       if (notification != null && android != null && !kIsWeb) {
-       
         flutterLocalNotificationsPlugin?.show(
           notification.hashCode,
           notification.title,
@@ -93,7 +92,7 @@ class _LandingScreenState extends State<LandingScreen> {
             android: AndroidNotificationDetails(
               channel!.id,
               channel!.name,
-              channel!.description,
+              channelDescription: channel!.description,
               playSound: true,
               icon: '@mipmap/icon',
             ),
@@ -102,13 +101,11 @@ class _LandingScreenState extends State<LandingScreen> {
         );
       }
     }).onData((data) {
-      
       Map<String, dynamic> feedData =
           json.decode(data.data['feedModel']) as Map<String, dynamic>;
       RemoteNotification? notification = data.notification;
       AndroidNotification? android = data.notification!.android;
       if (notification != null && android != null && !kIsWeb) {
-        
         flutterLocalNotificationsPlugin?.show(
           notification.hashCode,
           notification.title,
@@ -117,7 +114,7 @@ class _LandingScreenState extends State<LandingScreen> {
             android: AndroidNotificationDetails(
               channel!.id,
               channel!.name,
-              channel!.description,
+              channelDescription: channel!.description,
               // TODO add a proper drawable resource to android, for now using
               //      one that already exists in example app.
               icon: '@mipmap/icon',
@@ -159,7 +156,6 @@ class _LandingScreenState extends State<LandingScreen> {
       Map<String, dynamic> feedData =
           json.decode(data.data['feedModel']) as Map<String, dynamic>;
 
-      
       flutterLocalNotificationsPlugin?.show(
         data.notification.hashCode,
         data.notification!.title,
@@ -168,7 +164,7 @@ class _LandingScreenState extends State<LandingScreen> {
           android: AndroidNotificationDetails(
             channel!.id,
             channel!.name,
-            channel!.description,
+            channelDescription: channel!.description,
             // TODO add a proper drawable resource to android, for now using
             //      one that already exists in example app.
             icon: '@mipmap/icon',
@@ -179,29 +175,28 @@ class _LandingScreenState extends State<LandingScreen> {
       );
 
       if (feedData.containsKey('updateType')) {
-          print(feedData['isFree'].runtimeType);
-          FeedModel feedModel = FeedModel(
-              uploaderName: feedData['uploaderName'],
-              title: data.notification!.title!,
-              body: data.notification!.body!,
-              uploaderCover: feedData['uploaderCover'],
-              mangaId: feedData['mangaId'],
-              mangaName: feedData['mangaName'],
-              mangaCover: feedData['mangaCover'],
-              mangaDescription: feedData['mangaDescription'],
-              chapterId: feedData['chapterId'],
-              chapterName: feedData['chapterName'],
-              isFree: feedData['isFree'] == true ? true : false,
-              point: feedData['point'],
-              isPurchase: feedData['isPurchase'] == true ? true : false,
-              updateType: feedData['updateType'],
-              chapterNo: feedData['chapterNo'],
-              totalPages: feedData['totalPages'],
-              timeStamp: DateTime.now());
-          Box<FeedModel> box = Hive.box<FeedModel>('feed');
-          box.add(feedModel);
-        }
-
+        print(feedData['isFree'].runtimeType);
+        FeedModel feedModel = FeedModel(
+            uploaderName: feedData['uploaderName'],
+            title: data.notification!.title!,
+            body: data.notification!.body!,
+            uploaderCover: feedData['uploaderCover'],
+            mangaId: feedData['mangaId'],
+            mangaName: feedData['mangaName'],
+            mangaCover: feedData['mangaCover'],
+            mangaDescription: feedData['mangaDescription'],
+            chapterId: feedData['chapterId'],
+            chapterName: feedData['chapterName'],
+            isFree: feedData['isFree'] == true ? true : false,
+            point: feedData['point'],
+            isPurchase: feedData['isPurchase'] == true ? true : false,
+            updateType: feedData['updateType'],
+            chapterNo: feedData['chapterNo'],
+            totalPages: feedData['totalPages'],
+            timeStamp: DateTime.now());
+        Box<FeedModel> box = Hive.box<FeedModel>('feed');
+        box.add(feedModel);
+      }
     });
     apiRepository = ApiRepository(getIt.call());
     authData = AuthFunction.getAuthData();

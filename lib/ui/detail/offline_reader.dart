@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:async';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,10 +162,12 @@ class _OfflineReaderState extends State<OfflineReader> {
                   Row(
                     children: [
                       Expanded(
-                        child: RaisedButton(
-                          color: viewer == 'manga'
-                              ? Colors.white70
-                              : Colors.black54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: viewer == 'manga'
+                                ? Colors.white70
+                                : Colors.black54,
+                          ),
                           child: Text(
                             'Manga',
                             style: TextStyle(
@@ -182,10 +183,12 @@ class _OfflineReaderState extends State<OfflineReader> {
                         ),
                       ),
                       Expanded(
-                        child: RaisedButton(
-                          color: viewer == 'webtoon'
-                              ? Colors.white70
-                              : Colors.black54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: viewer == 'webtoon'
+                                ? Colors.white70
+                                : Colors.black54,
+                          ),
                           child: Text(
                             'Webtoon',
                             style: TextStyle(
@@ -212,10 +215,12 @@ class _OfflineReaderState extends State<OfflineReader> {
                   Row(
                     children: [
                       Expanded(
-                        child: RaisedButton(
-                          color: direction == 'Axis.vertical'
-                              ? Colors.white70
-                              : Colors.black54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: direction == 'Axis.vertical'
+                                ? Colors.white70
+                                : Colors.black54,
+                          ),
                           child: Icon(
                             Icons.swap_vertical_circle_outlined,
                             color: direction == 'Axis.vertical'
@@ -231,10 +236,13 @@ class _OfflineReaderState extends State<OfflineReader> {
                       viewer == 'webtoon'
                           ? Container()
                           : Expanded(
-                              child: RaisedButton(
-                                color: direction == 'Axis.horizontal'
-                                    ? Colors.white70
-                                    : Colors.black54,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      direction == 'Axis.horizontal'
+                                          ? Colors.white70
+                                          : Colors.black54,
+                                ),
                                 child: Icon(
                                   Icons.swap_horizontal_circle_outlined,
                                   color: direction == 'Axis.horizontal'

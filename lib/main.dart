@@ -101,7 +101,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         android: AndroidNotificationDetails(
           channel!.id,
           channel!.name,
-          channel!.description,
+          channelDescription: channel!.description,
           icon: '@mipmap/icon',
           playSound: true,
         ),
@@ -142,7 +142,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         android: AndroidNotificationDetails(
           channel!.id,
           channel!.name,
-          channel!.description,
+          channelDescription: channel!.description,
           // TODO add a proper drawable resource to android, for now using
           //      one that already exists in example app.
           icon: '@mipmap/icon',
@@ -214,7 +214,8 @@ Future<void> main() async {
     channel = const AndroidNotificationChannel(
       'high_importance_channel', // id
       'High Importance Notifications', // title
-      'This channel is used for important notifications.', // description
+      description:
+          'This channel is used for important notifications.', // description
       importance: Importance.high,
     );
 
@@ -362,6 +363,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Manga Turn',
         color: Colors.indigo,
         theme: ThemeData(
+          useMaterial3: false,
           fontFamily: 'baloo2',
           scaffoldBackgroundColor: Colors.white,
           cardColor: Colors.white,

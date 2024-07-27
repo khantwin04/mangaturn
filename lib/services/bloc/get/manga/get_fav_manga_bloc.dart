@@ -5,89 +5,65 @@ import 'package:mangaturn/models/manga_models/favourite_manga_model.dart';
 import 'package:mangaturn/models/manga_models/manga_model.dart';
 import 'package:mangaturn/services/repo/api_repository.dart';
 import 'package:rxdart/rxdart.dart';
+
 part 'get_fav_manga_event.dart';
 part 'get_fav_manga_state.dart';
 
 class GetFavMangaBloc extends Bloc<GetFavMangaEvent, GetFavMangaState> {
   GetFavMangaBloc({required this.apiRepository})
-      : super(const GetFavMangaState());
+      : super(const GetFavMangaState()) {
+    on<GetFavMangaFetched>(_onFetched);
+    on<GetFavMangaReload>(_onReload);
+  }
 
   final ApiRepository apiRepository;
-
-  set setToken(String data) => token = data;
-
   late String token;
+  int page = 0;
 
-  @override
-  Stream<Transition<GetFavMangaEvent, GetFavMangaState>> transformEvents(
-    Stream<GetFavMangaEvent> events,
-    TransitionFunction<GetFavMangaEvent, GetFavMangaState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
-    );
-  }
-
-  @override
-  Stream<GetFavMangaState> mapEventToState(GetFavMangaEvent event) async* {
-    if (event is GetFavMangaFetched) {
-      yield await _mapMangaFetchedToState(state);
-    } else if (event is GetFavMangaReload) {
-      yield await _mapMangaFetchedToState(state.copyWith(
-          mangaList: [],
-          hasReachedMax: false,
-          status: GetFavMangaStatus.initial));
-    }
-  }
-
-  Future<GetFavMangaState> _mapMangaFetchedToState(
-      GetFavMangaState state) async {
-    if (state.hasReachedMax) return state;
+  void _onFetched(
+      GetFavMangaFetched event, Emitter<GetFavMangaState> emit) async {
+    if (state.hasReachedMax) return;
     try {
-      if (state.status == GetFavMangaStatus.initial) {
-        final mangaList = await _fetchFavManga();
-        return state.copyWith(
-          status: GetFavMangaStatus.success,
-          mangaList: mangaList,
-          hasReachedMax: false,
-        );
-      }
       final mangaList = await _fetchFavManga();
-      return mangaList.isEmpty
+      emit(mangaList.isEmpty
           ? state.copyWith(hasReachedMax: true)
           : state.copyWith(
               status: GetFavMangaStatus.success,
               mangaList: List.of(state.mangaList)..addAll(mangaList),
               hasReachedMax: false,
-            );
-    } on Exception {
-      return state.copyWith(status: GetFavMangaStatus.failure);
+            ));
+    } catch (_) {
+      emit(state.copyWith(status: GetFavMangaStatus.failure));
     }
   }
 
-  set setPage(data) => page = data;
-
-  int page = 0;
+  void _onReload(
+      GetFavMangaReload event, Emitter<GetFavMangaState> emit) async {
+    try {
+      page = 0; // Reset page number for reload
+      final mangaList = await _fetchFavManga();
+      emit(state.copyWith(
+        status: GetFavMangaStatus.success,
+        mangaList: mangaList,
+        hasReachedMax: false,
+      ));
+    } catch (_) {
+      emit(state.copyWith(status: GetFavMangaStatus.failure));
+    }
+  }
 
   Future<List<MangaModel>> _fetchFavManga() async {
-
     try {
-      GetAllMangaModel data =
+      final GetAllMangaModel data =
           await apiRepository.getAllFavouriteManga(page++, token);
       print(data.mangaList.length);
       return data.mangaList;
     } catch (e) {
-      print(e.toString() + " Error");
-      switch (e.runtimeType) {
-        case DioError:
-          // Here's the sample to get the failed response error code and message
-          final res = (e as DioError).response;
-          print(res.toString());
-          break;
-        default:
+      print('${e.toString()} Error');
+      if (e is DioError) {
+        // Handle DioError specific cases
+        print(e.response?.toString());
       }
-
       return [];
     }
   }
@@ -99,4 +75,7 @@ class GetFavMangaBloc extends Bloc<GetFavMangaEvent, GetFavMangaState> {
   Future<void> deleteMangaById(int mangaId) async {
     await apiRepository.removeFavouriteManga(mangaId, token);
   }
+
+  set setToken(String data) => token = data;
+  set setPage(int data) => page = data;
 }

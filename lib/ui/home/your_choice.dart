@@ -49,7 +49,9 @@ class YourChoice extends StatefulWidget {
 class _YourChoiceState extends State<YourChoice> {
   @override
   void initState() {
-    BlocProvider.of<GetUnreadCmtCountCubit>(context).getUnreadCmtCount();
+    Future.delayed(Duration(seconds: 2)).then((_) =>
+        BlocProvider.of<GetUnreadCmtCountCubit>(context).getUnreadCmtCount());
+
     super.initState();
   }
 
@@ -297,15 +299,14 @@ class _YourChoiceState extends State<YourChoice> {
                                             ));
                                           },
                                           child: GFIconBadge(
-                                              position:
-                                                  GFBadgePosition.topStart(
-                                                top: 0,
-                                              ),
-                                              child: FaIcon(
-                                                FontAwesomeIcons.comment,
-                                                color: Colors.blue,
-                                              ),
-                                              counterChild: BlocBuilder<
+                                            position: GFBadgePosition.topStart(
+                                              top: 0,
+                                            ),
+                                            child: FaIcon(
+                                              FontAwesomeIcons.comment,
+                                              color: Colors.blue,
+                                            ),
+                                            counterChild: BlocBuilder<
                                                 GetUnreadCmtCountCubit,
                                                 GetUnreadCmtCountState>(
                                               builder: (context, state) {
@@ -323,7 +324,7 @@ class _YourChoiceState extends State<YourChoice> {
                                                 }
                                               },
                                             ),
-                                              ),
+                                          ),
                                         ),
                                       ]),
                                   ListTile(

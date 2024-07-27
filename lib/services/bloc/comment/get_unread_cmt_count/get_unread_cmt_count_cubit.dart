@@ -8,15 +8,14 @@ class GetUnreadCmtCountCubit extends Cubit<GetUnreadCmtCountState> {
   ApiRepository repo;
   GetUnreadCmtCountCubit(this.repo) : super(GetUnreadCmtCountInitial());
 
-  
   set setToken(String data) => token = data;
 
-  late String token;
+  String? token;
 
   void getUnreadCmtCount() {
     emit(GetUnreadCmtCountLoading());
     repo
-        .getUnreadCommentCount(token)
+        .getUnreadCommentCount(token!)
         .then((value) => emit(GetUnreadCmtCountSuccess(value)))
         .catchError((e) => emit(GetUnreadCmtCountFail(e.toString())));
   }

@@ -8,7 +8,7 @@ part 'free_point_state.dart';
 class FreePointCubit extends Cubit<FreePointState> {
   FreePointCubit() : super(FreePointInitial());
 
-    RewardedAd? _rewardedAd;
+  RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
 
   bool watched = false;
@@ -23,7 +23,6 @@ class FreePointCubit extends Cubit<FreePointState> {
     RewardedAd.load(
         adUnitId: Constant.downloadRewardId,
         request: AdRequest(),
-        
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
             print('$ad loaded.');
@@ -40,8 +39,7 @@ class FreePointCubit extends Cubit<FreePointState> {
               createRewardedAd();
             }
             setWatch = true;
-            emit(FreePointFail(
-                'Thank You Very Much!'));
+            emit(FreePointFail('Thank You Very Much!'));
           },
         ));
   }
@@ -71,12 +69,13 @@ class FreePointCubit extends Cubit<FreePointState> {
     );
 
     _rewardedAd!.setImmersiveMode(true);
-    _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-      emit(FreePointFail('Thank You Very Much!'));
-      
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
-    });
+    _rewardedAd!.show(
+      onUserEarnedReward: (ad, reward) {
+        emit(FreePointFail('Thank You Very Much!'));
+
+        print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+      },
+    );
     _rewardedAd = null;
   }
-
 }

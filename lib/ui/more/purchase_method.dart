@@ -14,9 +14,9 @@ import 'package:mangaturn/ui/more/purchase_history.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mangaturn/services/bloc/post/buy_point_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
 
 class PurchaseMethod extends StatefulWidget {
   GetUserModel user;
@@ -49,15 +49,13 @@ class _PurchaseMethodState extends State<PurchaseMethod> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 1,
         // selectedAssets: images,
-        materialOptions: MaterialOptions(
-          lightStatusBar: true,
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Select images",
+
+        androidOptions: const AndroidOptions(
+          maxImages: 300,
+          hasCameraInPickerPage: true,
           allViewTitle: "All Photos",
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
         ),
       );
     } on Exception catch (e) {
@@ -338,13 +336,14 @@ class _PurchaseMethodState extends State<PurchaseMethod> {
                       ),
                       Container(
                         width: double.infinity,
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           onPressed: request.receipt == null
                               ? null
                               : () {
                                   newRequetPoint();
                                 },
-                          color: Colors.red,
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red),
                           child: Text(
                             'Submit ScreenShot',
                             style: TextStyle(color: Colors.white),

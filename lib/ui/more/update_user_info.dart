@@ -15,7 +15,7 @@ import 'package:mangaturn/services/bloc/put/update_user_info_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
 
 class UpdateUserInfoView extends StatefulWidget {
   final UpdateUserInfoModel user;
@@ -93,15 +93,13 @@ class _UpdateUserInfoViewState extends State<UpdateUserInfoView> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 1,
         // selectedAssets: images,
-        materialOptions: MaterialOptions(
+        androidOptions: AndroidOptions(
+          maxImages: 1,
           lightStatusBar: true,
-          actionBarColor: "#abcdef",
           actionBarTitle: "Select images",
           allViewTitle: "All Photos",
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
         ),
       );
     } on Exception catch (e) {
@@ -379,7 +377,6 @@ class _UpdateUserInfoViewState extends State<UpdateUserInfoView> {
                                                 _profileImg!),
                                             description: _description,
                                             type: widget.user.type,
-                                            
                                             payment:
                                                 '{\"wavePay\":\"$wavepayPhone\",\"kPay\":\"$kpayPhone\"}');
                                     BlocProvider.of<UpdateUserInfoCubit>(
@@ -396,7 +393,6 @@ class _UpdateUserInfoViewState extends State<UpdateUserInfoView> {
                                                 : _username,
                                             type: widget.user.type,
                                             description: _description,
-                                            
                                             payment:
                                                 '{\"wavePay\":\"$wavepayPhone\",\"kPay\":\"$kpayPhone\"}');
                                     BlocProvider.of<UpdateUserInfoCubit>(

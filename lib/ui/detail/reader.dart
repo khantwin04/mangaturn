@@ -14,7 +14,6 @@ import 'package:mangaturn/services/repo/api_repository.dart';
 import 'package:mangaturn/ui/auth/auth_functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:mangaturn/ui/detail/manga_viewer.dart';
 import 'package:mangaturn/ui/detail/webtoon_viewer.dart';
 import 'package:mangaturn/ui/more/purchase_method.dart';
@@ -87,7 +86,7 @@ class _ReaderState extends State<Reader> {
     }
   }
 
-  void changeSetting() {
+  void changeSetting(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -105,10 +104,12 @@ class _ReaderState extends State<Reader> {
                   Row(
                     children: [
                       Expanded(
-                        child: RaisedButton(
-                          color: viewer == 'manga'
-                              ? Colors.white70
-                              : Colors.black54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: viewer == 'manga'
+                                ? Colors.white70
+                                : Colors.black54,
+                          ),
                           child: Text(
                             'Manga',
                             style: TextStyle(
@@ -124,10 +125,12 @@ class _ReaderState extends State<Reader> {
                         ),
                       ),
                       Expanded(
-                        child: RaisedButton(
-                          color: viewer == 'webtoon'
-                              ? Colors.white70
-                              : Colors.black54,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: viewer == 'webtoon'
+                                ? Colors.white70
+                                : Colors.black54,
+                          ),
                           child: Text(
                             'Webtoon',
                             style: TextStyle(
@@ -159,10 +162,13 @@ class _ReaderState extends State<Reader> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: RaisedButton(
-                                    color: direction == 'Axis.vertical'
-                                        ? Colors.white70
-                                        : Colors.black54,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          direction == 'Axis.vertical'
+                                              ? Colors.white70
+                                              : Colors.black54,
+                                    ),
                                     child: Icon(
                                       Icons.swap_vertical_circle_outlined,
                                       color: direction == 'Axis.vertical'
@@ -176,10 +182,13 @@ class _ReaderState extends State<Reader> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: RaisedButton(
-                                    color: direction == 'Axis.horizontal'
-                                        ? Colors.white70
-                                        : Colors.black54,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          direction == 'Axis.horizontal'
+                                              ? Colors.white70
+                                              : Colors.black54,
+                                    ),
                                     child: Icon(
                                       Icons.swap_horizontal_circle_outlined,
                                       color: direction == 'Axis.horizontal'
@@ -208,10 +217,13 @@ class _ReaderState extends State<Reader> {
                                       Row(
                                         children: [
                                           Expanded(
-                                            child: RaisedButton(
-                                              color: leftToRight == true
-                                                  ? Colors.white70
-                                                  : Colors.black54,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    leftToRight == true
+                                                        ? Colors.white70
+                                                        : Colors.black54,
+                                              ),
                                               child: Text(
                                                 'Left->Right',
                                                 style: TextStyle(
@@ -227,10 +239,13 @@ class _ReaderState extends State<Reader> {
                                             ),
                                           ),
                                           Expanded(
-                                            child: RaisedButton(
-                                              color: leftToRight == false
-                                                  ? Colors.white70
-                                                  : Colors.black54,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    leftToRight == false
+                                                        ? Colors.white70
+                                                        : Colors.black54,
+                                              ),
                                               child: Text(
                                                 'Right->Left',
                                                 style: TextStyle(
@@ -342,7 +357,7 @@ class _ReaderState extends State<Reader> {
     super.dispose();
   }
 
-  Widget appBar() {
+  Widget appBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(
@@ -360,7 +375,7 @@ class _ReaderState extends State<Reader> {
               color: Colors.white,
             ),
             onPressed: () {
-              changeSetting();
+              changeSetting(context);
             }),
       ],
       backgroundColor: Colors.black87,
@@ -539,36 +554,35 @@ class _ReaderState extends State<Reader> {
               : token == null
                   ? loading()
                   : viewer == 'manga'
-                          ? MangaViewer(
-                              chapterModel: chapterModel,
-                              token: token!,
-                              scrollDirection: getDir(),
-                              direction: direction,
-                              hide: (data) {
-                                print(data);
-                                setState(() {
-                                  hide = data;
-                                });
-                              },
-                              leftToRight: leftToRight,
-                            )
-                          : WebtoonViewer(
-                              chapterModel: chapterModel,
-                              token: token!,
-                              hide: (data) {
-                                print(data);
-                                setState(() {
-                                  hide = data;
-                                });
-                              }),
-                    
+                      ? MangaViewer(
+                          chapterModel: chapterModel,
+                          token: token!,
+                          scrollDirection: getDir(),
+                          direction: direction,
+                          hide: (data) {
+                            print(data);
+                            setState(() {
+                              hide = data;
+                            });
+                          },
+                          leftToRight: leftToRight,
+                        )
+                      : WebtoonViewer(
+                          chapterModel: chapterModel,
+                          token: token!,
+                          hide: (data) {
+                            print(data);
+                            setState(() {
+                              hide = data;
+                            });
+                          }),
           hide
               ? Container()
               : Positioned(
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: appBar(),
+                  child: appBar(context),
                 ),
           hide
               ? Container()

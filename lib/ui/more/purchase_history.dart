@@ -15,7 +15,7 @@ class PurchaseHistory extends StatefulWidget {
 }
 
 class _PurchaseHistoryState extends State<PurchaseHistory> {
-  String url = 'https://mangaturn.games/dev/api';
+  String url = 'http://146.190.80.28:8080/mt/api';
   late ApiRepository _apiRepository;
   late String token;
 
@@ -26,7 +26,6 @@ class _PurchaseHistoryState extends State<PurchaseHistory> {
     });
     getData();
   }
-  
 
   Future<List<PointPurchaseModel>> getPointPurchaseList(
       @required String token, int page) async {

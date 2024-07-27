@@ -27,9 +27,10 @@ class RewardCubit extends Cubit<RewardState> {
     RewardedAd.load(
         adUnitId: Constant.helpServerRewardId,
         request: AdRequest(),
-        serverSideVerificationOptions: ServerSideVerificationOptions(
-          userId: userId.toString(),
-        ),
+
+        // serverSideVerificationOptions: ServerSideVerificationOptions(
+        //   userId: userId.toString(),
+        // ),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
             print('$ad loaded.');
@@ -77,11 +78,13 @@ class RewardCubit extends Cubit<RewardState> {
     );
 
     _rewardedAd!.setImmersiveMode(true);
-    _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-      emit(RewardFail('( ${reward.amount} )ပွိုင့် ရရှိပါပြီ'));
-      
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
-    });
+    _rewardedAd!.show(
+      onUserEarnedReward: (ad, reward) {
+        emit(RewardFail('( ${reward.amount} )ပွိုင့် ရရှိပါပြီ'));
+
+        print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+      },
+    );
     _rewardedAd = null;
   }
 }

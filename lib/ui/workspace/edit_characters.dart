@@ -9,7 +9,7 @@ import 'package:mangaturn/models/manga_models/update_character_model.dart';
 import 'package:mangaturn/services/bloc/post/edit_characters_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:multi_image_picker_plus/multi_image_picker_plus.dart';
 
 class EditCharacters extends StatefulWidget {
   final bool newCharacter;
@@ -56,15 +56,13 @@ class _EditCharactersState extends State<EditCharacters> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 1,
         // selectedAssets: images,
-        materialOptions: MaterialOptions(
+        androidOptions: AndroidOptions(
           lightStatusBar: true,
-          actionBarColor: "#abcdef",
+          maxImages: 1,
           actionBarTitle: "Select images",
           allViewTitle: "All Photos",
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
         ),
       );
     } on Exception catch (e) {

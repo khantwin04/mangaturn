@@ -24,7 +24,7 @@ import 'package:mangaturn/models/version_model.dart';
 import 'package:retrofit/retrofit.dart';
 part 'api.g.dart';
 
-@RestApi(baseUrl: 'https://mangaturn.games/dev/api/')
+@RestApi(baseUrl: 'http://146.190.80.28:8080/mt/api/')
 abstract class ApiService {
   factory ApiService(Dio dio) => _ApiService(dio);
 

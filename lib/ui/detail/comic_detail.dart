@@ -108,15 +108,6 @@ class _ComicDetailState extends State<ComicDetail> {
 
   @override
   void didChangeDependencies() {
-    final arg = ModalRoute.of(context)!.settings.arguments;
-    if (arg != null) {
-      List data = arg as List;
-      getMangaInfo(data[0], data[1]);
-    } else {
-      _manga = widget.model!;
-    }
-
-    followIdList = BlocProvider.of<GetFollowCubit>(context).getFollowUserIdList;
     super.didChangeDependencies();
   }
 
@@ -152,6 +143,18 @@ class _ComicDetailState extends State<ComicDetail> {
     fToast.init(context);
     _apiRepository = ApiRepository(getIt.call());
     dbHelper = DBHelper();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final arg = ModalRoute.of(context)!.settings.arguments;
+      if (arg != null) {
+        List data = arg as List;
+        getMangaInfo(data[0], data[1]);
+      } else {
+        _manga = widget.model!;
+      }
+
+      followIdList =
+          BlocProvider.of<GetFollowCubit>(context).getFollowUserIdList;
+    });
     super.initState();
   }
 
@@ -498,7 +501,8 @@ class _ComicDetailState extends State<ComicDetail> {
                                     BlocProvider.of<GetFollowCubit>(context)
                                         .follow(follow);
                                     Navigator.of(context).pop();
-                                    key.currentState!.showSnackBar(SnackBar(
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
                                       content: Text(
                                           'You will get new chapter updates notification. \nFrom ${_manga!.uploadedByUser!.username}.'),
                                       duration: Duration(seconds: 1),
@@ -541,8 +545,10 @@ class _ComicDetailState extends State<ComicDetail> {
                                     Utility.nextScreen(
                                         context,
                                         ViewAllComments(
-                                           uploaderId: _manga!.uploadedByUser!.id,
-                                        uploaderName: _manga!.uploadedByUser!.username,
+                                          uploaderId:
+                                              _manga!.uploadedByUser!.id,
+                                          uploaderName:
+                                              _manga!.uploadedByUser!.username,
                                           mangaId: _manga!.id,
                                         ));
                                   },
@@ -558,7 +564,8 @@ class _ComicDetailState extends State<ComicDetail> {
                                       context,
                                       ViewAllComments(
                                         uploaderId: _manga!.uploadedByUser!.id,
-                                        uploaderName: _manga!.uploadedByUser!.username,
+                                        uploaderName:
+                                            _manga!.uploadedByUser!.username,
                                         mangaId: _manga!.id,
                                       ));
                                 },
@@ -569,33 +576,39 @@ class _ComicDetailState extends State<ComicDetail> {
                                       borderRadius: BorderRadius.circular(10.0),
                                       border: Border.all(
                                           color: Colors.grey, width: 0.5)),
-                                  child: state.cmtList.length == 0? Container(
-                                      width: double.infinity,
-                                      alignment: Alignment.center,
-                                      height: 50,
-                                      child: Text('Tap to write comments')): ListView.builder(
-                                    itemCount: state.cmtList.length,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        minLeadingWidth: 50,
-                                        leading: CircleAvatar(
-                                          backgroundImage: state.cmtList[index]
-                                                  .createdUserProfileUrl.isEmpty
-                                              ? null
-                                              : CachedNetworkImageProvider(state
-                                                  .cmtList[index]
-                                                  .createdUserProfileUrl),
+                                  child: state.cmtList.length == 0
+                                      ? Container(
+                                          width: double.infinity,
+                                          alignment: Alignment.center,
+                                          height: 50,
+                                          child: Text('Tap to write comments'))
+                                      : ListView.builder(
+                                          itemCount: state.cmtList.length,
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              minLeadingWidth: 50,
+                                              leading: CircleAvatar(
+                                                backgroundImage: state
+                                                        .cmtList[index]
+                                                        .createdUserProfileUrl
+                                                        .isEmpty
+                                                    ? null
+                                                    : CachedNetworkImageProvider(
+                                                        state.cmtList[index]
+                                                            .createdUserProfileUrl),
+                                              ),
+                                              title: Text(
+                                                  '${state.cmtList[index].createdUsername}'),
+                                              subtitle: Text(
+                                                  '${state.cmtList[index].content}'),
+                                              trailing: Text(
+                                                  '${timeago.format(DateTime.fromMicrosecondsSinceEpoch(state.cmtList[index].createdDateInMilliSeconds * 1000))}'),
+                                            );
+                                          },
                                         ),
-                                        title: Text(
-                                            '${state.cmtList[index].createdUsername}'),
-                                        subtitle: Text(
-                                            '${state.cmtList[index].content}'),
-                                        trailing: Text('${timeago.format(DateTime.fromMicrosecondsSinceEpoch(state.cmtList[index].createdDateInMilliSeconds * 1000))}'),
-                                      );
-                                    },
-                                  ),
                                 ),
                               );
                             } else if (state is GetLastetCommentFail) {

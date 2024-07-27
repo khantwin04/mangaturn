@@ -37,7 +37,7 @@ class GetAllChapterCubit extends Cubit<GetAllChapterState> {
     _chapterList.add(data);
   }
 
-  void addAllChapterToList(List<ChapterModel> data){
+  void addAllChapterToList(List<ChapterModel> data) {
     _allChapterList.addAll(data);
   }
 
@@ -45,7 +45,7 @@ class GetAllChapterCubit extends Cubit<GetAllChapterState> {
     return [..._chapterList];
   }
 
-  List<ChapterModel> getAllChapters(){
+  List<ChapterModel> getAllChapters() {
     return [..._allChapterList];
   }
 
@@ -56,7 +56,6 @@ class GetAllChapterCubit extends Cubit<GetAllChapterState> {
     apiRepository
         .getAllChapters(mangaId, sortBy, sortType, page, size, token)
         .then((chapters) async {
-
       for (int i = 0; i < chapters.length; i++) {
         if (dChapters.where((e) => e.chapterId == chapters[i].id).length == 1) {
           addOneChapter(ChapterModel(
@@ -98,13 +97,12 @@ class GetAllChapterCubit extends Cubit<GetAllChapterState> {
     apiRepository
         .getAllChapters(mangaId, sortBy, sortType, page, size, token)
         .then((chapters) async {
-          print(chapters.length);
-          addAllChapterToList(chapters);
-
+      print(chapters.length);
+      addAllChapterToList(chapters);
     }).catchError((obj) {
       switch (obj.runtimeType) {
         case DioError:
-        // Here's the sample to get the failed response error code and message
+          // Here's the sample to get the failed response error code and message
           final res = (obj as DioError).response;
           if (page == 0)
             emit(GetAllChapterFail(res.toString()));

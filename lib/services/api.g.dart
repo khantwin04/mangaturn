@@ -8,7 +8,7 @@ part of 'api.dart';
 
 class _ApiService implements ApiService {
   _ApiService(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'https://mangaturn.games/dev/api/';
+    baseUrl ??= 'http://146.190.80.28:8080/mt/api/';
   }
 
   final Dio _dio;

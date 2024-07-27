@@ -11,12 +11,12 @@ class GetLastetCommentCubit extends Cubit<GetLastetCommentState> {
 
   set setToken(String data) => token = data;
 
-  late String token;
+  String? token;
 
   void getLastetComment(int mangaId) {
     emit(GetLastetCommentLoading());
     repo
-        .getLastCommentByMangaId(mangaId, 0, token)
+        .getLastCommentByMangaId(mangaId, 0, token!)
         .then((value) => emit(GetLastetCommentSuccess(value)))
         .catchError((e) => emit(GetLastetCommentFail(e.toString())));
   }

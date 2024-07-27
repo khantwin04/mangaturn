@@ -72,8 +72,9 @@ class AuthFunction {
     //       .fetchRelatedGenreManga(firstGenreId, 'first');
 
     // if (similarGenreId != null)
-    //    BlocProvider.of<GetAllMangaCubit>(context)
+    //   BlocProvider.of<GetAllMangaCubit>(context)
     //       .fetchRelatedGenreManga(similarGenreId, 'similar');
+
     BlocProvider.of<GetAllMangaCubit>(context)
         .fetchAllManga("views", "desc", 0);
     BlocProvider.of<GetAllMangaCubit>(context).fetchAllManga("name", "asc", 0);
@@ -132,13 +133,14 @@ class AuthFunction {
     BlocProvider.of<BuyPointCubit>(context).setToken = token;
 
     //comment
-     BlocProvider.of<GetLastetCommentCubit>(context).setToken = token;
-      BlocProvider.of<GetAllCommentBloc>(context).setToken = token;
-      BlocProvider.of<PostCommentCubit>(context).setToken = token;
-      BlocProvider.of<GetMentionedCommentBloc>(context).setToken = token;
-       BlocProvider.of<GetUnreadCmtCountCubit>(context).setToken = token;
-       BlocProvider.of<GetUnreadCommentByAdminCubit>(context).setToken = token;
+    BlocProvider.of<GetUnreadCmtCountCubit>(context).setToken = token;
 
+    BlocProvider.of<GetUnreadCommentByAdminCubit>(context).setToken = token;
+
+    BlocProvider.of<GetLastetCommentCubit>(context).setToken = token;
+    BlocProvider.of<GetAllCommentBloc>(context).setToken = token;
+    BlocProvider.of<PostCommentCubit>(context).setToken = token;
+    BlocProvider.of<GetMentionedCommentBloc>(context).setToken = token;
   }
 
   static String? getToken() {
@@ -151,6 +153,7 @@ class AuthFunction {
     print('auth box');
     print(authBox.get('0'));
     AuthResponseModel? auth = authBox.get('0') ?? null;
+    print('${auth?.accessToken}');
     return auth;
   }
 }

@@ -7,82 +7,66 @@ import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'get_uploaded_manga_event.dart';
-
 part 'get_uploaded_manga_state.dart';
 
 class GetUploadedMangaBloc
     extends Bloc<GetUploadedMangaEvent, GetUploadedMangaState> {
   GetUploadedMangaBloc({required this.apiRepository})
-      : super(const GetUploadedMangaState());
+      : super(const GetUploadedMangaState()) {
+    on<GetUploadedMangaFetched>(_onFetched);
+    on<GetUploadedMangaReload>(_onReload);
+  }
 
   final ApiRepository apiRepository;
+  late String token;
+  late String uploaderName;
+  int page = 0;
 
   set setToken(String data) => token = data;
   set setUploaderName(String name) => uploaderName = name;
-  late String uploaderName;
-  late String token;
+  set setPage(int data) => page = data;
 
-  @override
-  Stream<Transition<GetUploadedMangaEvent, GetUploadedMangaState>>
-      transformEvents(
-    Stream<GetUploadedMangaEvent> events,
-    TransitionFunction<GetUploadedMangaEvent, GetUploadedMangaState>
-        transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
-    );
-  }
-
-  @override
-  Stream<GetUploadedMangaState> mapEventToState(
-      GetUploadedMangaEvent event) async* {
-    if (event is GetUploadedMangaFetched) {
-      yield await _mapMangaFetchedToState(state);
-    } else if (event is GetUploadedMangaReload) {
-      yield await _mapMangaFetchedToState(
-        state.copyWith(
-          mangaList: [],
-          hasReachedMax: false,
-          status: GetUploadedMangaStatus.initial,
-        ),
-      );
-    }
-  }
-
-  Future<GetUploadedMangaState> _mapMangaFetchedToState(
-      GetUploadedMangaState state) async {
-    if (state.hasReachedMax) return state;
+  void _onFetched(GetUploadedMangaFetched event,
+      Emitter<GetUploadedMangaState> emit) async {
+    if (state.hasReachedMax) return;
     try {
-      if (state.status == GetUploadedMangaStatus.initial) {
-        final mangaList = await _fetchMangaByUpdate();
-        return state.copyWith(
-          status: GetUploadedMangaStatus.success,
-          mangaList: mangaList,
-          hasReachedMax: false,
-        );
-      }
-      final mangaList = await _fetchMangaByUpdate();
-      return mangaList.isEmpty
+      final mangaList = await _fetchMangaByUploader();
+      emit(mangaList.isEmpty
           ? state.copyWith(hasReachedMax: true)
           : state.copyWith(
               status: GetUploadedMangaStatus.success,
               mangaList: List.of(state.mangaList)..addAll(mangaList),
               hasReachedMax: false,
-            );
-    } on Exception {
-      return state.copyWith(status: GetUploadedMangaStatus.failure);
+            ));
+    } catch (_) {
+      emit(state.copyWith(status: GetUploadedMangaStatus.failure));
     }
   }
 
-  set setPage(data) => page = data;
-  int page = 0;
+  void _onReload(
+      GetUploadedMangaReload event, Emitter<GetUploadedMangaState> emit) async {
+    try {
+      page = 0; // Reset page number for reload
+      final mangaList = await _fetchMangaByUploader();
+      emit(state.copyWith(
+        status: GetUploadedMangaStatus.success,
+        mangaList: mangaList,
+        hasReachedMax: false,
+      ));
+    } catch (_) {
+      emit(state.copyWith(status: GetUploadedMangaStatus.failure));
+    }
+  }
 
-  Future<List<MangaModel>> _fetchMangaByUpdate() async {
-    print('Page value $page');
-    GetAllMangaModel data = await apiRepository.getMangaByUploaderName(
-        'updated_Date', 'desc', page++, uploaderName, token);
-    return data.mangaList;
+  Future<List<MangaModel>> _fetchMangaByUploader() async {
+    try {
+      print('Page value $page');
+      GetAllMangaModel data = await apiRepository.getMangaByUploaderName(
+          'updated_Date', 'desc', page++, uploaderName, token);
+      return data.mangaList;
+    } catch (e) {
+      print(e.toString() + " Error");
+      return [];
+    }
   }
 }
